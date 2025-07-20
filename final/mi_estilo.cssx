@@ -1,0 +1,72 @@
+titulo_pagina = "Mi Página Web"
+
+@color_principal = magenta
+@fuente_principal = Arial, sans-serif
+@tamaño_base = 20
+
+body {
+  fondo = @color_principal
+  color = negro
+  tamano = @tamaño_base
+  margen = 0
+  relleno = 20
+  fuente = @fuente_principal
+  alinear = center
+}
+
+parrafo {
+  texto = "¡Hola mundo desde mi compilador CSS!"
+  tamano = 30
+  margen = 20 0
+}
+
+boton {
+  texto = "Haz clic aquí"
+  relleno = 10 20
+  fondo = verde
+  color = blanco
+  borde = none
+  redondeado = 1
+  cursor = pointer
+  tamano = 20
+}
+
+.caja {
+  fondo = naranja
+  color = blanco
+  margen = 40 auto
+  relleno = 20
+  ancho = 80%
+  borde = 1px solid negro
+  redondeado = 100
+  sombra = 0 4px 8px rgba(0,0,0,0.1)
+
+  titulo {
+    texto = "Este es un título dentro de .caja"
+    tamano = 30
+    color = morado
+    alinear = center
+    peso = bold
+    margen = 0 0 15 0
+  }
+
+  enlace {
+    texto = "Este es un enlace dentro de .caja"
+    decoracion = underline
+    color = rojo
+    mostrar = block
+    margen = 10 0
+  }
+}
+
+.boton {
+  texto = "Esto es un botón simulado con la clase .boton"
+  relleno = 15 25
+  fondo = morado
+  color = negro
+  redondeado = 200
+  margen = 20 auto
+  mostrar = inline-block
+  cursor = pointer
+  transicion = all 0.3s ease
+}
