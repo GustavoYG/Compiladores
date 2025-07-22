@@ -1,72 +1,371 @@
-titulo_pagina = "Mi Página Web"
+titulo_pagina = "Web"
 
-@color_principal = magenta
-@fuente_principal = Arial, sans-serif
-@tamaño_base = 20
+@color_primario = #2c3e50
+@color_secundario = #3498db
+@color_acento = #e74c3c
+@fuente_principal = "Roboto", sans-serif
+@ancho_maximo = 1200
+@radio_borde = 8
 
 body {
-  fondo = @color_principal
-  color = negro
-  tamano = @tamaño_base
-  margen = 0
-  relleno = 20
+  fondo = #f8f9fa
+  color = #333
   fuente = @fuente_principal
-  alinear = center
+  tamano = 16
+  margen = 0
+  interlineado = 1.6
 }
 
-parrafo {
-  texto = "¡Hola mundo desde mi compilador CSS!"
-  tamano = 30
-  margen = 20 0
+.contenedor {
+  ancho = 90%
+  ancho_max = @ancho_maximo
+  margen = 0 auto
+  relleno = 20 0
 }
 
-boton {
-  texto = "Haz clic aquí"
-  relleno = 10 20
-  fondo = verde
+encabezado {
+  fondo = @color_primario
   color = blanco
-  borde = none
-  redondeado = 1
-  cursor = pointer
-  tamano = 20
-}
+  relleno = 25 30
+  sombra = 0 2px 10px rgba(0,0,0,0.1)
 
-.caja {
-  fondo = naranja
-  color = blanco
-  margen = 40 auto
-  relleno = 20
-  ancho = 80%
-  borde = 1px solid negro
-  redondeado = 100
-  sombra = 0 4px 8px rgba(0,0,0,0.1)
-
-  titulo {
-    texto = "Este es un título dentro de .caja"
-    tamano = 30
-    color = morado
-    alinear = center
+  .logo {
+    texto = "MiEmpresa"
+    tamano = 28
     peso = bold
-    margen = 0 0 15 0
+    margen = 10 0 10 30
+    mostrar = inline-block
   }
 
-  enlace {
-    texto = "Este es un enlace dentro de .caja"
-    decoracion = underline
-    color = rojo
-    mostrar = block
-    margen = 10 0
+  navegacion {
+    mostrar = inline-block
+    flotante = right
+    margen = 0 30 0 0
+
+    enlace {
+      texto = "Inicio"
+      relleno = 12 18
+      color = blanco
+      decoracion = none
+      mostrar = inline-block
+      transicion = all 0.3s ease
+      redondeado = @radio_borde
+      margen = 0 5
+
+      .hover {
+        fondo = rgba(255,255,255,0.2)
+      }
+    }
+
+    enlace {
+      texto = "Servicios"
+      relleno = 12 18
+      color = blanco
+      decoracion = none
+      mostrar = inline-block
+      transicion = all 0.3s ease
+      redondeado = @radio_borde
+      margen = 0 5
+
+      .hover {
+        fondo = rgba(255,255,255,0.2)
+      }
+    }
+
+    enlace {
+      texto = "Contacto"
+      relleno = 12 18
+      color = blanco
+      decoracion = none
+      mostrar = inline-block
+      transicion = all 0.3s ease
+      redondeado = @radio_borde
+      margen = 0 5
+
+      .hover {
+        fondo = rgba(255,255,255,0.2)
+      }
+    }
   }
 }
 
-.boton {
-  texto = "Esto es un botón simulado con la clase .boton"
-  relleno = 15 25
-  fondo = morado
-  color = negro
-  redondeado = 200
-  margen = 20 auto
-  mostrar = inline-block
-  cursor = pointer
-  transicion = all 0.3s ease
+.tarjeta {
+  fondo = blanco
+  margen = 30 0
+  relleno = 30
+  redondeado = @radio_borde
+  sombra = 0 4px 15px rgba(0,0,0,0.1)
+  transicion = transform 0.3s ease
+
+  .hover {
+    transformar = translateY(-5px)
+    sombra = 0 8px 25px rgba(0,0,0,0.15)
+  }
+
+  titulo2 {
+    texto = "Desarrollo Web"
+    color = @color_primario
+    tamano = 24
+    margen = 0 0 15
+  }
+
+  parrafo {
+    texto = "Creamos sitios web."
+    color = #666
+    interlineado = 1.7
+    margen = 0 0 20
+  }
+
+  .precio {
+    texto = "Desde S/. "
+    color = @color_acento
+    tamano = 20
+    peso = bold
+    margen = 0 0 20
+  }
+
+  boton {
+    texto = "Ver detalles"
+    mostrar = inline-block
+    relleno = 12 24
+    fondo = @color_secundario
+    color = blanco
+    borde = none
+    redondeado = @radio_borde
+    cursor = pointer
+    transicion = all 0.3s ease
+
+    .hover {
+      fondo = @color_primario
+    }
+  }
+}
+
+.tarjeta {
+  fondo = blanco
+  margen = 30 0
+  relleno = 30
+  redondeado = @radio_borde
+  sombra = 0 4px 15px rgba(0,0,0,0.1)
+  transicion = transform 0.3s ease
+
+  .hover {
+    transformar = translateY(-5px)
+    sombra = 0 8px 25px rgba(0,0,0,0.15)
+  }
+
+  titulo2 {
+    texto = "Diseño Gráfico"
+    color = @color_primario
+    tamano = 24
+    margen = 0 0 15
+  }
+
+  parrafo {
+    texto = "Diseño"
+    color = #666
+    interlineado = 1.7
+    margen = 0 0 20
+  }
+
+  .precio {
+    texto = "Desde S/. "
+    color = @color_acento
+    tamano = 20
+    peso = bold
+    margen = 0 0 20
+  }
+
+  boton {
+    texto = "Ver portfolio"
+    mostrar = inline-block
+    relleno = 12 24
+    fondo = #27ae60
+    color = blanco
+    borde = none
+    redondeado = @radio_borde
+    cursor = pointer
+    transicion = all 0.3s ease
+
+    .hover {
+      fondo = @color_primario
+    }
+  }
+}
+
+.tarjeta {
+  fondo = blanco
+  margen = 30 0
+  relleno = 30
+  redondeado = @radio_borde
+  sombra = 0 4px 15px rgba(0,0,0,0.1)
+  transicion = transform 0.3s ease
+
+  .hover {
+    transformar = translateY(-5px)
+    sombra = 0 8px 25px rgba(0,0,0,0.15)
+  }
+
+  titulo2 {
+    texto = "Marketing Digital"
+    color = @color_primario
+    tamano = 24
+    margen = 25 0 15
+  }
+
+  parrafo {
+    texto = "Marketing online."
+    color = #666
+    interlineado = 1.7
+    margen = 25 0 20
+  }
+
+  .precio {
+    texto = "Desde S/. "
+    color = @color_acento
+    tamano = 20
+    peso = bold
+    margen = 0 0 20
+  }
+
+  boton {
+    texto = "Consultar"
+    mostrar = inline-block
+    relleno = 12 24
+    fondo = #f39c12
+    color = blanco
+    borde = none
+    redondeado = @radio_borde
+    cursor = pointer
+    transicion = all 0.3s ease
+
+    .hover {
+      fondo = @color_primario
+    }
+  }
+}
+
+.tarjeta {
+  fondo = blanco
+  margen = 30 0
+  relleno = 30
+  redondeado = @radio_borde
+  sombra = 0 4px 15px rgba(0,0,0,0.1)
+  transicion = transform 0.3s ease
+
+  .hover {
+    transformar = translateY(-5px)
+    sombra = 0 8px 25px rgba(0,0,0,0.15)
+  }
+
+  titulo2 {
+    texto = "Consultoría"
+    color = @color_primario
+    tamano = 24
+    margen = 0 0 15
+  }
+
+  parrafo {
+    texto = "Asesoramiento."
+    color = #666
+    interlineado = 1.7
+    margen = 25 0 20
+  }
+
+  .precio {
+    texto = "Desde S/. "
+    color = @color_acento
+    tamano = 20
+    peso = bold
+    margen = 25 0 20
+  }
+
+  boton {
+    texto = "Agendar"
+    mostrar = inline-block
+    relleno = 12 24
+    fondo = #9b59b6
+    color = blanco
+    borde = none
+    redondeado = @radio_borde
+    cursor = pointer
+    transicion = all 0.3s ease
+
+    .hover {
+      fondo = @color_primario
+    }
+  }
+}
+
+.contacto {
+  fondo = #ecf0f1
+  relleno = 40 30
+  redondeado = @radio_borde
+  margen = 40 0
+  alinear = center
+
+  titulo2 {
+    texto = "¿Listo para comenzar?"
+    color = @color_primario
+    tamano = 28
+    margen = 0 0 20
+  }
+
+  parrafo {
+    texto = "Contactanos hoy mismo y descubre cómo podemos ayudarte"
+    color = #666
+    tamano = 18
+    margen = 30 0 25
+  }
+
+  boton {
+    texto = "Contactar ahora"
+    relleno = 15 35
+    fondo = @color_acento
+    color = blanco
+    borde = none
+    redondeado = @radio_borde
+    cursor = pointer
+    tamano = 16
+    peso = bold
+    transicion = all 0.3s ease
+
+    .hover {
+      fondo = #c0392b
+      transformar = scale(1.05)
+    }
+  }
+}
+
+pie {
+  fondo = @color_primario
+  color = blanco
+  relleno = 40 0
+  alinear = center
+  margen = 50 0 0 0
+
+  .info {
+    margen = 0 0 20
+
+    titulo3 {
+      texto = "MiEmpresa"
+      tamano = 24
+      peso = bold
+      margen = 0 0 10
+    }
+
+    parrafo {
+      texto = "Soluciones profesionales para hacer crecer tu negocio"
+      opacidad = 0.8
+      margen = 25
+    }
+  }
+
+  .derechos {
+    texto = "© 2024 MiEmpresa. Todos los derechos reservados."
+    tamano = 14
+    color = rgba(255,255,255,0.7)
+    borde_arriba = 1px solid rgba(255,255,255,0.2)
+    relleno = 20 0 0
+  }
 }
