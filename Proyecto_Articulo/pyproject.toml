@@ -1,0 +1,6 @@
+[project]
+name = "cssx"
+version = "0.1.0"
+description = "Compilador modularizado CSSX"
+authors = ["Tu Nombre <tucorreo@ejemplo.com>"]
+dependencies = ["flask", "pytest"]

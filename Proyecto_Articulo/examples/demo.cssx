@@ -1,0 +1,6 @@
+titulo_pagina = "Demo CSSX"
+body {
+  fondo = azul
+  color = blanco
+  tamano = 16
+}
