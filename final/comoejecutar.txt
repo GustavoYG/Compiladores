@@ -1,10 +1,131 @@
+# COMPILADOR CSSX - GUÍA DE EJECUCIÓN COMPLETA
+# ===============================================
+
+## INSTALACIÓN Y CONFIGURACIÓN
 python3 --version && pip3 --version
 
-carpeta pal proyecto
-
+# Crear entorno virtual
 python3 -m venv venv
-source venv/bin/activate   #venv\Scripts\activate
+source venv/bin/activate   # En Windows: venv\Scripts\activate
 
+# Instalar dependencias
 pip install flask flask-socketio watchdog
 
-python dev_server.py
+## COMANDOS PRINCIPALES
+
+# 1. SERVIDOR DE DESARROLLO (Hot Reload) - Recomendado para desarrollo
+python dev_server.py                              # Usa mi_estilo.cssx por defecto
+python dev_server.py test_plantillas_final.cssx   # Usar archivo específico
+python dev_server.py ejemplo_estilos.cssx         # Cualquier archivo .cssx
+
+# 2. TRADUCIR ARCHIVO CSSX A CSS Y HTML COMPLETO
+python3 tradc.py mi_estilo.cssx
+python3 tradc.py test_plantillas_final.cssx
+
+# 3. ANÁLISIS SEMÁNTICO - Mostrar warnings y errores
+python3 main.py --check mi_estilo.cssx
+python3 main.py --check prueba_errores.cssx
+python3 main.py --check test_plantillas_final.cssx
+
+# 4. GENERAR SOLO CSS (sin HTML) - Para integración con otros proyectos
+python3 main.py --css mi_estilo.cssx
+python3 main.py --css test_plantillas_final.cssx
+
+# 5. MOSTRAR AST (Árbol Sintáctico) - Para análisis de estructura
+python3 main.py --ast mi_estilo.cssx
+python3 main.py --ast test_plantillas_final.cssx
+
+# 6. ANÁLISIS COMPLETO - AST + Diagnósticos + CSS + Métricas
+python3 main.py --analyze mi_estilo.cssx
+python3 main.py --analyze test_plantillas_final.cssx
+
+# 7. AYUDA Y OPCIONES
+python3 main.py --help
+
+## ARCHIVOS DE EJEMPLO INCLUIDOS
+
+# mi_estilo.cssx              - Ejemplo básico con variables, selectores anidados
+# test_plantillas_final.cssx  - Demostración completa del sistema de plantillas
+# prueba_errores.cssx         - Archivo con warnings para testing
+# prueba_limpia.cssx         - Archivo sin errores para testing
+
+## SISTEMA DE PLANTILLAS (MIXINS) - NUEVA FUNCIONALIDAD
+
+# SINTAXIS DE DEFINICIÓN:
+plantilla nombre_plantilla(@param1=valor_default, @param2=otro_valor) {
+    propiedad: @param1
+    otra-propiedad: @param2
+}
+
+# SINTAXIS DE USO:
+.mi-selector {
+    usar nombre_plantilla(nuevo_valor1, nuevo_valor2)     # Argumentos posicionales
+    usar nombre_plantilla()                               # Usar valores por defecto
+    usar nombre_plantilla(@param1=valor_específico)       # Argumentos nombrados
+}
+
+## EJEMPLO COMPLETO DE PLANTILLAS:
+
+@espaciado_base = 16px
+@color_primario = #3498db
+
+plantilla margen_card(@p=@espaciado_base, @r=8px, @bg=white) {
+    padding: @p
+    border-radius: @r
+    background: @bg
+    margin: 10px
+}
+
+.card {
+    usar margen_card(20px, 12px, #e74c3c)  # Genera padding: 20px; border-radius: 12px; etc.
+}
+
+.mini-card {
+    usar margen_card()                      # Usa valores por defecto
+}
+
+.custom-card {
+    usar margen_card(@bg=@color_primario, @p=24px)  # Argumentos nombrados
+}
+
+## EVIDENCIA Y VALIDACIÓN
+
+# Para mostrar que el sistema funciona correctamente:
+
+# Ver CSS generado desde plantillas:
+python3 main.py --css test_plantillas_final.cssx
+
+# Ver estructura AST con plantillas:
+python3 main.py --ast test_plantillas_final.cssx
+
+# Análisis completo con métricas:
+python3 main.py --analyze test_plantillas_final.cssx
+
+# Verificar manejo de errores:
+python3 main.py --check prueba_errores.cssx
+
+## QUÉ ES EL AST (ABSTRACT SYNTAX TREE - ÁRBOL SINTÁCTICO ABSTRACTO)
+
+El AST es la representación estructurada del código CSSX en memoria:
+
+1. **Stylesheet** - Nodo raíz que contiene todo el documento
+2. **VariableDecl** - Variables como @espaciado_base = 16px
+3. **TemplateDef** - Definición de plantilla con parámetros y cuerpo
+4. **RuleSet** - Selectores CSS con sus declaraciones (.card { ... })
+5. **Declaration** - Propiedades CSS (padding: 20px)
+6. **TemplateUse** - Uso de plantilla (usar margen_card(...))
+7. **Values** - Valores como Dimension(20.0px), ColorLiteral('#e74c3c'), etc.
+
+PROCESO DE COMPILACIÓN:
+texto CSSX → Parser → AST → Expansión de Plantillas → AST Expandido → CSS
+
+## CARACTERÍSTICAS IMPLEMENTADAS
+
+✅ Parser extendido con sintaxis de plantillas en español
+✅ Sistema AST con nodos TemplateDef, TemplateUse, Param, NamedArg
+✅ Expansión de plantillas antes del análisis semántico
+✅ Soporte para argumentos posicionales, nombrados y valores por defecto
+✅ Detección de recursión en plantillas
+✅ Integración completa con el sistema de compilación existente
+✅ Análisis semántico con diagnósticos detallados
+✅ Generación de CSS válido desde plantillas expandidas

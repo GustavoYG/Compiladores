@@ -1,7 +1,7 @@
-# generador_css.py
+# css_generator.py
 # Funciones para generar código CSS desde el código CSSX parseado
 
-from analizador_sintactico import parse_bloque_css
+from cssx.parser.syntactic import parse_bloque_css
 
 
 def traducir_a_css(entrada):

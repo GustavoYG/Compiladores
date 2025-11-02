@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Generada</title>
+  <style>
+  body {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    margin: 0px;
+    line-height: 1.6px;
+  }
+
+  header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 25px 30px;
+    box-shadow: 0 2.0px 10.0px rgba(0,0,0,0.1);
+    display: inline-block;
+    float: right;
+    margin: 0px 30px 0px 0px;
+  }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0px 10px 30px;
+      display: inline-block;
+    }
+
+  .hover {
+    transform: translateY;
+    box-shadow: 0 8.0px 25.0px rgba(0,0,0,0.15);
+  }
+
+  p {
+    color: #666;
+    line-height: 1.7px;
+    margin: 0px 0px 20px;
+  }
+
+  button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tarjeta {
+    background-color: white;
+    margin: 30px 0px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4.0px 15.0px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    color: #2c3e50;
+    font-size: 24px;
+    margin: 0px 0px 15px;
+  }
+
+    .hover {
+      transform: translateY;
+      box-shadow: 0 8.0px 25.0px rgba(0,0,0,0.15);
+    }
+
+  .hover {
+    transform: translateY;
+    box-shadow: 0 8.0px 25.0px rgba(0,0,0,0.15);
+  }
+
+  p {
+    color: #666;
+    line-height: 1.7px;
+    margin: 25px 0px 20px;
+  }
+
+  button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tarjeta {
+    background-color: white;
+    margin: 30px 0px;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4.0px 15.0px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    color: #2c3e50;
+    font-size: 24px;
+    margin: 0px 0px 15px;
+  }
+
+    .hover {
+      transform: translateY;
+      box-shadow: 0 8.0px 25.0px rgba(0,0,0,0.15);
+    }
+
+  h2 {
+    color: #2c3e50;
+    font-size: 28px;
+    margin: 0px 0px 20px;
+  }
+
+  button {
+    padding: 15px 35px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 40px 0px;
+    text-align: center;
+    margin: 50px 0px 0px 0px;
+    font-size: 14px;
+    color: rgba;
+    border-top: 1.0px solid rgba(255,255,255,0.2);
+    padding: 20px 0px 0px;
+  }
+
+    .info {
+      margin: 0px 0px 20px;
+    }
+
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+  <script>
+    // Configuración para el hot reload
+    document.addEventListener('DOMContentLoaded', function() {
+      // Crear elemento para mostrar errores
+      const errorOverlay = document.createElement('div');
+      errorOverlay.style.display = 'none';
+      errorOverlay.style.position = 'fixed';
+      errorOverlay.style.top = '0';
+      errorOverlay.style.left = '0';
+      errorOverlay.style.right = '0';
+      errorOverlay.style.padding = '20px';
+      errorOverlay.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
+      errorOverlay.style.color = 'white';
+      errorOverlay.style.zIndex = '9999';
+      errorOverlay.style.fontSize = '16px';
+      errorOverlay.style.fontFamily = 'monospace';
+      errorOverlay.style.whiteSpace = 'pre-wrap';
+      errorOverlay.style.maxHeight = '50%';
+      errorOverlay.style.overflowY = 'auto';
+      document.body.appendChild(errorOverlay);
+      
+      // Conectar al servidor de Socket.IO
+      const socket = io();
+      
+      // Manejar evento de recarga
+      socket.on('reload', function() {
+        console.log('Recargando página debido a cambios en el archivo CSSX...');
+        location.reload();
+      });
+      
+      // Manejar evento de error
+      socket.on('error_compilation', function(data) {
+        console.error('Error de compilación:', data.message);
+        errorOverlay.textContent = 'Error de compilación: ' + data.message;
+        errorOverlay.style.display = 'block';
+        
+        // Ocultar el mensaje de error después de 10 segundos
+        setTimeout(function() {
+          errorOverlay.style.display = 'none';
+        }, 10000);
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="contenedor">
+</div>
+<header>
+  <div class="logo">
+    MiEmpresa
+  </div>
+  <nav>
+    <a>
+      Inicio
+      <div class="hover">
+      </div>
+    </a>
+    <a>
+      Servicios
+      <div class="hover">
+      </div>
+    </a>
+    <a>
+      Contacto
+      <div class="hover">
+      </div>
+    </a>
+  </nav>
+</header>
+<div class="tarjeta">
+  <div class="hover">
+  </div>
+  <h2>
+    Desarrollo Web
+  </h2>
+  <p>
+    Creamos sitios web.
+  </p>
+  <div class="precio">
+    Desde S/.
+  </div>
+  <button>
+    Ver detalles
+    <div class="hover">
+    </div>
+  </button>
+</div>
+<div class="tarjeta">
+  <div class="hover">
+  </div>
+  <h2>
+    Diseño Gráfico
+  </h2>
+  <p>
+    Diseño
+  </p>
+  <div class="precio">
+    Desde S/.
+  </div>
+  <button>
+    Ver portfolio
+    <div class="hover">
+    </div>
+  </button>
+</div>
+<div class="tarjeta">
+  <div class="hover">
+  </div>
+  <h2>
+    Marketing Digital
+  </h2>
+  <p>
+    Marketing online.
+  </p>
+  <div class="precio">
+    Desde S/.
+  </div>
+  <button>
+    Consultar
+    <div class="hover">
+    </div>
+  </button>
+</div>
+<div class="tarjeta">
+  <div class="hover">
+  </div>
+  <h2>
+    Consultoría
+  </h2>
+  <p>
+    Asesoramiento.
+  </p>
+  <div class="precio">
+    Desde S/.
+  </div>
+  <button>
+    Agendar
+    <div class="hover">
+    </div>
+  </button>
+</div>
+<div class="contacto">
+  <h2>
+    ¿Listo para comenzar?
+  </h2>
+  <p>
+    Contactanos hoy mismo y descubre cómo podemos ayudarte
+  </p>
+  <button>
+    Contactar ahora
+    <div class="hover">
+    </div>
+  </button>
+</div>
+<footer>
+  <div class="info">
+    <h3>
+      MiEmpresa
+    </h3>
+    <p>
+      Soluciones profesionales para hacer crecer tu negocio
+    </p>
+  </div>
+  <div class="derechos">
+    © 2024px MiEmpresa. Todos los derechos reservados.
+  </div>
+</footer>
+</body>
+</html>

@@ -1,8 +1,8 @@
-# generador_html.py
+# html_generator.py
 # Funciones para generar código HTML desde el código CSSX parseado
 
-from analizador_sintactico import analizar_linea, extraer_bloque, extraer_texto_del_bloque
-from diccionarios import DICCIONARIO_HTML, SELECTORES_HTML_ESTANDAR
+from cssx.parser.syntactic import analizar_linea, extraer_bloque, extraer_texto_del_bloque
+from cssx.lexer.dictionaries import DICCIONARIO_HTML, SELECTORES_HTML_ESTANDAR
 
 
 def generar_html_estructurado(lineas, variables=None, nivel=0, es_body=False, selector_actual=""):

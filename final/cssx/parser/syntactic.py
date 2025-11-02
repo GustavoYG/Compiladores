@@ -1,8 +1,8 @@
-# analizador_sintactico.py
+# syntactic.py
 # Funciones para el análisis sintáctico del código CSSX
 
 import re
-from diccionarios import COLORES, DICCIONARIO_CSS, DICCIONARIO_HTML, SELECTORES_HTML_ESTANDAR
+from cssx.lexer.dictionaries import COLORES, DICCIONARIO_CSS, DICCIONARIO_HTML, SELECTORES_HTML_ESTANDAR
 
 
 def normalizar_valor(valor, variables):
@@ -54,7 +54,7 @@ def analizar_linea(linea, variables):
     linea = linea.strip()
 
     # Patrón más flexible que maneja mejor los espacios y caracteres especiales
-    patron_general = r'^\s*([@\w\u00C0-\u017F]+)\s*=\s*(.+)$'
+    patron_general = r'^\s*([@\w\u00C0-\u017F-]+)\s*=\s*(.+)$'
 
     match = re.match(patron_general, linea)
     if match:
@@ -163,8 +163,11 @@ def parse_bloque_css(lineas, selector=None, variables=None, nivel=0, html_elemen
             if css_hijo:
                 bloques_css.append(css_hijo)
 
-        elif linea == "}":
+        elif linea == "}" and nivel > 0:
             break
+        elif linea == "}":
+            # Ignorar llaves de cierre en el nivel raíz
+            pass
         else:
             try:
                 clave, valor = analizar_linea(linea, variables)
