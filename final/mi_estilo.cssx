@@ -1,0 +1,38 @@
+// Ejemplo de CSSX en español
+@color_primario = #3498db
+@color_secundario = #2ecc71
+@espaciado = 20px
+
+.contenedor {
+    fondo = @color_primario
+    relleno = @espaciado
+    margen = 10px auto
+    ancho = 80%
+}
+
+titulo1 {
+    texto = "Bienvenido al Editor CSSX"
+    tamano = 28px
+    peso = bold
+    color = @color_primario
+}
+
+parrafo {
+    texto = "Este es un ejemplo de CSSX en español. Puedes usar variables y propiedades en español."
+    color = #666
+    interlineado = 1.5
+    margen = 0 0 20px
+}
+
+.boton {
+    fondo = @color_secundario
+    color = blanco
+    relleno = 12px 24px
+    borde = none
+    redondeado = 5px
+    cursor = pointer
+}
+
+.boton:hover {
+    fondo = #27ae60
+}

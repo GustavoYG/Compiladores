@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Editor CSSX v2.0 - Compilador Educativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2d2d30;
+            padding: 12px 20px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header .status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status.connected {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status.disconnected {
+            background: #f44336;
+            color: white;
+        }
+
+        .status.compiling {
+            background: #ff9800;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto;
+            height: calc(100vh - 60px);
+            gap: 1px;
+            background: #3e3e42;
+        }
+
+        .editor-panel {
+            background: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-panel {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .console-panel {
+            grid-column: 1 / -1;
+            background: #252526;
+            border-top: 1px solid #3e3e42;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 10px 15px;
+            background: #2d2d30;
+            border-bottom: 1px solid #3e3e42;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .preview-panel .panel-header {
+            background: #f5f5f5;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #cssxEditor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 20px;
+            resize: none;
+            outline: none;
+        }
+
+        #cssxEditor:focus {
+            background: #1e1e1e;
+        }
+
+        .preview-content {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+        }
+
+        #previewFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .console-content {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .console-line {
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .console-time {
+            color: #888;
+            margin-right: 10px;
+            min-width: 60px;
+            font-size: 11px;
+        }
+
+        .console-message {
+            flex: 1;
+        }
+
+        .console-line.info {
+            color: #4fc3f7;
+        }
+
+        .console-line.warning {
+            color: #ffb74d;
+        }
+
+        .console-line.error {
+            color: #f44336;
+        }
+
+        .console-line.success {
+            color: #4caf50;
+        }
+
+        .toolbar {
+            padding: 8px 15px;
+            background: #2d2d30;
+            border-top: 1px solid #3e3e42;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: #007acc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #005a9e;
+        }
+
+        .btn-secondary {
+            background: #3e3e42;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #4a4a4f;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #388e3c;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+        }
+
+        .syntax-highlight {
+            /* Colores para syntax highlighting básico */
+        }
+
+        /* Sintaxis highlight para CSSX */
+        .variable { color: #9cdcfe; }
+        .property { color: #92c5f8; }
+        .value { color: #ce9178; }
+        .selector { color: #d7ba7d; }
+        .comment { color: #6a9955; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr auto;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #252526;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #424242;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a4a;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 Editor CSSX - Compilador Educativo</h1>
+        <div class="status connected" id="connectionStatus">🟢 Conectado</div>
+    </div>
+
+    <div class="container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                📄 Editor CSSX
+                <span style="float: right; font-size: 12px; color: #888;">✨ Compilación automática activada</span>
+            </div>
+            <div class="editor-container">
+                <textarea id="cssxEditor" placeholder="// Escribe tu código CSSX aquí... ✨ Se compila automáticamente mientras escribes
+// Ejemplo:
+@color_primario = #3498db
+@espaciado = 20px
+
+.contenedor {
+    fondo = @color_primario
+    relleno = @espaciado
+    redondeado = 8px
+    color = blanco
+}
+
+titulo1 {
+    texto = 'Mi Página Web'
+    tamano = 24px
+    peso = bold
+}"></textarea>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-secondary" onclick="clearEditor()">�️ Limpiar</button>
+                <button class="btn btn-success" onclick="loadExample()">� Ejemplo</button>
+                <button class="btn btn-primary" onclick="compileCode()" title="Forzar compilación manual">⚡ Compilar ahora</button>
+                <span style="color: #888; font-size: 12px; margin-left: auto;">
+                    Líneas: <span id="lineCount">1</span> | Auto-compilación cada 800ms
+                </span>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="panel-header">
+                🌐 Vista Previa
+                <span style="float: right; font-size: 12px; color: #666;">Resultado en tiempo real</span>
+            </div>
+            <div class="preview-content">
+                <iframe id="previewFrame" src="about:blank">
+                    <div class="loading">Cargando vista previa...</div>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="console-panel">
+            <div class="panel-header">
+                🖥️ Consola de Compilación
+                <button class="btn btn-secondary" onclick="clearConsole()" style="float: right; padding: 4px 8px;">Limpiar</button>
+            </div>
+            <div class="console-content" id="consoleContent">
+                <div class="console-line info">
+                    <span class="console-time">00:00</span>
+                    <span class="console-message">Editor CSSX iniciado. Listo para compilar código.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let socket;
+        let editor = document.getElementById('cssxEditor');
+        let previewFrame = document.getElementById('previewFrame');
+        let consoleContent = document.getElementById('consoleContent');
+        let connectionStatus = document.getElementById('connectionStatus');
+        let lineCount = document.getElementById('lineCount');
+        let isConnected = false;
+
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSocket();
+            initializeEditor();
+            loadExample(); // Cargar ejemplo inicial
+        });
+
+        // Configurar WebSocket
+        function initializeSocket() {
+            socket = io();
+            
+            socket.on('connect', function() {
+                isConnected = true;
+                connectionStatus.innerHTML = '🟢 Conectado';
+                connectionStatus.className = 'status connected';
+                logToConsole('Conexión establecida con el servidor', 'success');
+            });
+
+            socket.on('disconnect', function() {
+                isConnected = false;
+                connectionStatus.innerHTML = '🔴 Desconectado';
+                connectionStatus.className = 'status disconnected';
+                logToConsole('Conexión perdida con el servidor', 'error');
+            });
+
+            socket.on('compilation_result', function(data) {
+                handleCompilationResult(data);
+            });
+
+            socket.on('compilation_error', function(data) {
+                logToConsole('Error de compilación: ' + data.message, 'error');
+                if (data.details) {
+                    logToConsole(data.details, 'error');
+                }
+            });
+
+            socket.on('preview_updated', function(data) {
+                updatePreview(data.html);
+                logToConsole('Vista previa actualizada', 'success');
+            });
+        }
+
+        // Configurar editor
+        function initializeEditor() {
+            // Contador de líneas
+            editor.addEventListener('input', function() {
+                updateLineCount();
+                // Auto-compilar inmediatamente mientras escribes
+                clearTimeout(window.compileTimeout);
+                window.compileTimeout = setTimeout(compileCode, 800); // Reducido de 1500ms a 800ms
+            });
+
+            // También compilar con Ctrl+S (opcional)
+            editor.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    compileCode();
+                }
+            });
+
+            updateLineCount();
+        }
+
+        // Actualizar contador de líneas
+        function updateLineCount() {
+            const lines = editor.value.split('\n').length;
+            lineCount.textContent = lines;
+        }
+
+        // Compilar código CSSX
+        function compileCode() {
+            if (!isConnected) {
+                logToConsole('Error: No hay conexión con el servidor', 'error');
+                return;
+            }
+
+            const cssxCode = editor.value.trim();
+            if (!cssxCode) {
+                logToConsole('Editor vacío - no hay código para compilar', 'warning');
+                return;
+            }
+
+            // Mostrar estado de compilación
+            connectionStatus.innerHTML = '⚡ Compilando...';
+            connectionStatus.className = 'status compiling';
+
+            logToConsole('🔄 Auto-compilando código CSSX...', 'info');
+            
+            // Enviar código al servidor
+            socket.emit('compile_cssx', {
+                code: cssxCode,
+                timestamp: new Date().getTime()
+            });
+        }
+
+        // Manejar resultado de compilación
+        function handleCompilationResult(data) {
+            // Restaurar estado conectado
+            connectionStatus.innerHTML = '🟢 Conectado';
+            connectionStatus.className = 'status connected';
+
+            if (data.success) {
+                logToConsole('✅ Compilación automática exitosa', 'success');
+                
+                if (data.warnings && data.warnings.length > 0) {
+                    data.warnings.forEach(warning => {
+                        logToConsole('⚠️ ' + warning, 'warning');
+                    });
+                }
+
+                if (data.html) {
+                    updatePreview(data.html);
+                }
+
+                if (data.css) {
+                    logToConsole('📄 CSS actualizado (' + data.css.length + ' caracteres)', 'info');
+                }
+            } else {
+                logToConsole('❌ Error en la compilación automática', 'error');
+                if (data.errors) {
+                    data.errors.forEach(error => {
+                        logToConsole('Error: ' + error, 'error');
+                    });
+                }
+            }
+        }
+
+        // Actualizar vista previa
+        function updatePreview(htmlContent) {
+            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            doc.open();
+            doc.write(htmlContent);
+            doc.close();
+        }
+
+        // Limpiar editor
+        function clearEditor() {
+            editor.value = '';
+            updateLineCount();
+            logToConsole('Editor limpiado', 'info');
+        }
+
+        // Cargar ejemplo
+        function loadExample() {
+            const example = `@color_primario = #3498db
+@color_secundario = #2c3e50
+@espaciado = 20px
+@radio = 8px
+
+.contenedor {
+    ancho = 90%
+    ancho_max = 800px
+    margen = 0 auto
+    relleno = @espaciado
+}
+
+encabezado {
+    fondo = @color_primario
+    color = blanco
+    relleno = 30px
+    redondeado = @radio
+    sombra = 0 2px 10px rgba(0,0,0,0.1)
+
+    titulo1 {
+        texto = "Mi Sitio Web"
+        tamano = 28px
+        peso = bold
+        margen = 0
+    }
+}
+
+.tarjeta {
+    fondo = blanco
+    relleno = 25px
+    margen = @espaciado 0
+    redondeado = @radio
+    sombra = 0 4px 15px rgba(0,0,0,0.1)
+    borde = 1px solid #e1e8ed
+
+    titulo2 {
+        texto = "Bienvenido"
+        color = @color_secundario
+        tamano = 20px
+        margen = 0 0 15px
+    }
+
+    parrafo {
+        texto = "Este es un ejemplo de CSSX en español. Puedes usar variables con @ y propiedades en español como 'fondo', 'relleno', 'margen', etc."
+        color = #666
+        interlineado = 1.5
+        margen = 0 0 20px
+    }
+
+    boton {
+        texto = "Ver más"
+        relleno = 12px 24px
+        fondo = @color_primario
+        color = blanco
+        borde = none
+        redondeado = 5px
+        cursor = pointer
+
+        .hover {
+            fondo = @color_secundario
+        }
+    }
+}`;
+
+            editor.value = example;
+            updateLineCount();
+            logToConsole('📝 Ejemplo cargado - compilando automáticamente...', 'info');
+            
+            // Compilar automáticamente el ejemplo
+            setTimeout(compileCode, 300);
+        }
+
+        // Limpiar consola
+        function clearConsole() {
+            consoleContent.innerHTML = '';
+            logToConsole('Consola limpiada', 'info');
+        }
+
+        // Añadir mensaje a la consola
+        function logToConsole(message, type = 'info') {
+            const now = new Date();
+            const timeString = now.toTimeString().substring(0, 8);
+            
+            const line = document.createElement('div');
+            line.className = 'console-line ' + type;
+            line.innerHTML = `
+                <span class="console-time">${timeString}</span>
+                <span class="console-message">${message}</span>
+            `;
+            
+            consoleContent.appendChild(line);
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }
+
+        // Función para redimensionar paneles (opcional)
+        function resizePanels() {
+            // Implementar si se necesita redimensionamiento manual
+        }
+    </script>
+</body>
+</html>

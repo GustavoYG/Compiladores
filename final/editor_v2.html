@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor CSSX - Compilador Educativo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #252526;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3c3c3c;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-indicator.connected {
+            background: #2ea043;
+            color: white;
+        }
+
+        .status-indicator.disconnected {
+            background: #cf222e;
+            color: white;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto;
+            gap: 0;
+            height: calc(100vh - 60px);
+        }
+
+        .editor-panel {
+            background: #1e1e1e;
+            border-right: 1px solid #3c3c3c;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-panel {
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: #2d2d30;
+            padding: 8px 15px;
+            border-bottom: 1px solid #3c3c3c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 15px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+
+        .preview-frame {
+            flex: 1;
+            border: none;
+            background: white;
+            width: 100%;
+            height: 100%;
+        }
+
+        .console-panel {
+            grid-column: 1 / -1;
+            background: #1e1e1e;
+            border-top: 1px solid #3c3c3c;
+            max-height: 200px;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .console-content {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .console-line {
+            padding: 2px 0;
+            border-bottom: 1px solid #2d2d30;
+        }
+
+        .console-line.success {
+            color: #4ec9b0;
+        }
+
+        .console-line.error {
+            color: #f48771;
+        }
+
+        .console-line.warning {
+            color: #dcdcaa;
+        }
+
+        .console-line.info {
+            color: #569cd6;
+        }
+
+        .toolbar {
+            padding: 8px 15px;
+            background: #252526;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #3c3c3c;
+        }
+
+        .btn {
+            padding: 6px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #0e639c;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1177bb;
+        }
+
+        .btn-secondary {
+            background: #3c3c3c;
+            color: #d4d4d4;
+        }
+
+        .btn-secondary:hover {
+            background: #505050;
+        }
+
+        .btn-success {
+            background: #2ea043;
+            color: white;
+        }
+
+        .auto-compile-indicator {
+            font-size: 12px;
+            color: #ffa500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 Editor CSSX - Compilador Educativo</h1>
+        <div class="status">
+            <div id="connectionStatus" class="status-indicator disconnected">⚪ Desconectado</div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <button class="btn btn-primary" onclick="compileCode()">▶️ Compilar ahora</button>
+        <button class="btn btn-secondary" onclick="clearEditor()">🗑️ Limpiar</button>
+        <button class="btn btn-success" onclick="loadExample()">📋 Ejemplo</button>
+        <button class="btn btn-primary" onclick="downloadHTML()" style="background: #0d7a3d;">💾 Descargar HTML</button>
+        <button class="btn btn-primary" onclick="downloadCSS()" style="background: #0d7a3d;">💾 Descargar CSS</button>
+        <div class="auto-compile-indicator">
+            ⚡ Auto-compilación activada (800ms)
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="editor-panel">
+            <div class="panel-header">
+                <div class="panel-title">📄 Editor CSSX</div>
+                <div style="font-size: 12px; color: #858585;">Líneas: <span id="lineCount">0</span></div>
+            </div>
+            <textarea id="editor" class="editor-textarea" placeholder="Escribe tu código CSSX aquí..."></textarea>
+        </div>
+
+        <div class="preview-panel">
+            <div class="panel-header" style="border-bottom: 1px solid #ddd;">
+                <div class="panel-title" style="color: #333;">🖼️ Vista Previa</div>
+                <div style="font-size: 12px; color: #666;">Resultado en tiempo real</div>
+            </div>
+            <iframe id="previewFrame" class="preview-frame"></iframe>
+        </div>
+
+        <div class="console-panel">
+            <div class="panel-header">
+                <div class="panel-title">💬 Consola de Compilación</div>
+                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="clearConsole()">Limpiar</button>
+            </div>
+            <div id="consoleContent" class="console-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        const socket = io();
+        const editor = document.getElementById('editor');
+        const previewFrame = document.getElementById('previewFrame');
+        const consoleContent = document.getElementById('consoleContent');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const lineCount = document.getElementById('lineCount');
+        
+        let isConnected = false;
+        let compileTimeout = null;
+        let lastCompiledHTML = '';
+        let lastCompiledCSS = '';
+
+        // Inicialización
+        window.addEventListener('load', function() {
+            logToConsole('🚀 Editor CSSX iniciado. Listo para compilar código.', 'info');
+            updateLineCount();
+            
+            // Cargar código inicial desde el servidor
+            fetch('/get_initial_code')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code) {
+                        editor.value = data.code;
+                        updateLineCount();
+                        logToConsole('📂 Código cargado desde mi_estilo.cssx', 'info');
+                    }
+                })
+                .catch(err => {
+                    logToConsole('⚠️ No se pudo cargar el código inicial', 'warning');
+                    loadExample(); // Cargar ejemplo si falla
+                });
+        });
+
+        // Conexión WebSocket
+        socket.on('connect', function() {
+            isConnected = true;
+            connectionStatus.textContent = '🟢 Conectado';
+            connectionStatus.className = 'status-indicator connected';
+            logToConsole('✅ Conexión establecida con el servidor', 'success');
+        });
+
+        socket.on('disconnect', function() {
+            isConnected = false;
+            connectionStatus.textContent = '🔴 Desconectado';
+            connectionStatus.className = 'status-indicator disconnected';
+            logToConsole('❌ Conexión perdida con el servidor', 'error');
+        });
+
+        socket.on('compilation_result', function(data) {
+            console.log('📦 Resultado recibido:', data);
+            console.log('   success:', data.success);
+            console.log('   warnings:', data.warnings);
+            console.log('   warnings.length:', data.warnings ? data.warnings.length : 'undefined');
+            console.log('   errors:', data.errors);
+            
+            if (data.success) {
+                logToConsole('✅ Compilación exitosa', 'success');
+                
+                // Guardar HTML y CSS para descarga
+                lastCompiledHTML = data.html || '';
+                lastCompiledCSS = data.css || '';
+                
+                console.log('🔍 Verificando warnings...');
+                console.log('   data.warnings existe?', !!data.warnings);
+                console.log('   data.warnings es array?', Array.isArray(data.warnings));
+                console.log('   data.warnings.length:', data.warnings ? data.warnings.length : 'N/A');
+                
+                // Mostrar warnings si hay
+                if (data.warnings && data.warnings.length > 0) {
+                    console.log('✅ Mostrando warnings en consola...');
+                    logToConsole('⚠️ Se encontraron ' + data.warnings.length + ' advertencia(s):', 'warning');
+                    data.warnings.forEach(warning => {
+                        console.log('   Warning individual:', warning);
+                        logToConsole('   • ' + warning, 'warning');
+                    });
+                } else {
+                    console.log('ℹ️ No hay warnings para mostrar');
+                }
+
+                // Actualizar vista previa
+                if (data.html) {
+                    updatePreview(data.html);
+                    logToConsole('🖼️ Vista previa actualizada correctamente', 'info');
+                } else {
+                    logToConsole('⚠️ No se generó HTML', 'warning');
+                }
+
+                // Log de CSS generado
+                if (data.css) {
+                    logToConsole('📄 CSS generado: ' + data.css.length + ' caracteres', 'info');
+                } else {
+                    logToConsole('⚠️ No se generó CSS', 'warning');
+                }
+            } else {
+                logToConsole('❌ Error en la compilación - El código tiene errores', 'error');
+                logToConsole('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+                
+                if (data.errors && data.errors.length > 0) {
+                    data.errors.forEach((error, index) => {
+                        logToConsole(`Error ${index + 1}: ${error}`, 'error');
+                    });
+                } else {
+                    logToConsole('Error desconocido en la compilación', 'error');
+                }
+                
+                logToConsole('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+                logToConsole('💡 Revisa la sintaxis de tu código CSSX', 'info');
+            }
+        });
+
+        socket.on('compilation_error', function(data) {
+            logToConsole('❌ ERROR CRÍTICO DEL SERVIDOR', 'error');
+            logToConsole('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+            logToConsole('Mensaje: ' + data.message, 'error');
+            
+            if (data.details) {
+                console.error('Detalles técnicos del error:', data.details);
+                logToConsole('⚠️ Ver consola del navegador (F12) para más detalles', 'warning');
+            }
+            
+            logToConsole('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+            logToConsole('💡 Esto puede indicar un problema con el compilador', 'info');
+        });
+
+        // Auto-compilación mientras escribes
+        editor.addEventListener('input', function() {
+            updateLineCount();
+            
+            // Cancelar timeout anterior
+            if (compileTimeout) {
+                clearTimeout(compileTimeout);
+            }
+            
+            // Programar nueva compilación
+            compileTimeout = setTimeout(function() {
+                logToConsole('⚡ Auto-compilando código CSSX...', 'info');
+                compileCode();
+            }, 800);
+        });
+
+        // Actualizar contador de líneas
+        function updateLineCount() {
+            const lines = editor.value.split('\n').length;
+            lineCount.textContent = lines;
+        }
+
+        // Compilar código
+        function compileCode() {
+            console.log('🔵 compileCode() llamado');
+            console.log('   isConnected:', isConnected);
+            
+            if (!isConnected) {
+                logToConsole('❌ Error: No hay conexión con el servidor', 'error');
+                console.error('❌ No conectado al servidor');
+                return;
+            }
+
+            const code = editor.value.trim();
+            console.log('   Código length:', code.length);
+            
+            if (!code) {
+                logToConsole('⚠️ El editor está vacío', 'warning');
+                console.warn('⚠️ Editor vacío');
+                return;
+            }
+
+            console.log('📤 Enviando código para compilar...');
+            console.log('   Primeras 100 chars:', code.substring(0, 100));
+            
+            socket.emit('compile_cssx', {
+                code: code,
+                timestamp: Date.now()
+            });
+            
+            console.log('✅ Evento compile_cssx emitido');
+        }
+
+        // Actualizar vista previa
+        function updatePreview(htmlContent) {
+            try {
+                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                doc.open();
+                doc.write(htmlContent);
+                doc.close();
+                console.log('✅ Vista previa actualizada exitosamente');
+            } catch (error) {
+                console.error('❌ Error al actualizar vista previa:', error);
+                logToConsole('❌ Error al actualizar vista previa: ' + error.message, 'error');
+            }
+        }
+
+        // Limpiar editor
+        function clearEditor() {
+            editor.value = '';
+            updateLineCount();
+            logToConsole('🗑️ Editor limpiado', 'info');
+        }
+
+        // Limpiar consola
+        function clearConsole() {
+            consoleContent.innerHTML = '';
+        }
+
+        // Cargar ejemplo
+        function loadExample() {
+            const example = `// Ejemplo de CSSX en español
+@color_primario = #3498db
+@color_secundario = #2ecc71
+@espaciado = 20px
+
+.contenedor {
+    fondo = @color_primario
+    relleno = @espaciado
+    margen = 10px auto
+    ancho = 80%
+}
+
+titulo1 {
+    texto = "Bienvenido al Editor CSSX"
+    tamano = 28px
+    peso = bold
+    color = @color_primario
+}
+
+parrafo {
+    texto = "Este es un ejemplo de CSSX en español. Puedes usar variables y propiedades en español."
+    color = #666
+    interlineado = 1.5
+    margen = 0 0 20px
+}
+
+.boton {
+    fondo = @color_secundario
+    color = blanco
+    relleno = 12px 24px
+    borde = none
+    redondeado = 5px
+    cursor = pointer
+}
+
+.boton:hover {
+    fondo = #27ae60
+}`;
+            
+            editor.value = example;
+            updateLineCount();
+            logToConsole('📋 Ejemplo cargado', 'success');
+            
+            // Auto-compilar el ejemplo
+            setTimeout(() => compileCode(), 500);
+        }
+
+        // Log a consola
+        function logToConsole(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'console-line ' + type;
+            line.textContent = `[${timestamp}] ${message}`;
+            consoleContent.appendChild(line);
+            consoleContent.scrollTop = consoleContent.scrollHeight;
+        }
+
+        // Atajo de teclado Ctrl+S para compilar
+        editor.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                compileCode();
+            }
+        });
+
+        // Función para descargar HTML
+        function downloadHTML() {
+            if (!lastCompiledHTML) {
+                logToConsole('⚠️ No hay HTML generado para descargar. Compila código primero.', 'warning');
+                return;
+            }
+
+            try {
+                const blob = new Blob([lastCompiledHTML], { type: 'text/html;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'output.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                logToConsole('💾 HTML descargado exitosamente como "output.html"', 'success');
+            } catch (error) {
+                logToConsole('❌ Error al descargar HTML: ' + error.message, 'error');
+            }
+        }
+
+        // Función para descargar CSS
+        function downloadCSS() {
+            if (!lastCompiledCSS) {
+                logToConsole('⚠️ No hay CSS generado para descargar. Compila código primero.', 'warning');
+                return;
+            }
+
+            try {
+                const blob = new Blob([lastCompiledCSS], { type: 'text/css;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'styles.css';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                logToConsole('💾 CSS descargado exitosamente como "styles.css"', 'success');
+            } catch (error) {
+                logToConsole('❌ Error al descargar CSS: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
