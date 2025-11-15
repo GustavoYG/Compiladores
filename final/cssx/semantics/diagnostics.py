@@ -8,14 +8,28 @@ from typing import Optional, List, Tuple
 @dataclass(slots=True)
 class Diagnostic:
     """Diagnóstico emitido por el análisis semántico"""
-    code: str            # p.ej., 'E030', 'W100'
     severity: str        # 'ERROR' | 'WARNING'
+    code: str            # p.ej., 'E030', 'W100'
     message: str         # explicación clara del problema
     file: str
     line: int
     col: int
     doc_url: Optional[str] = None
     related: Optional[List[Tuple[str, int, int, str]]] = None  # (file,line,col,nota) opcional
+
+    def to_dict(self):
+        """Returns a dictionary representation of the diagnostic."""
+        return {
+            "severity": self.severity,
+            "code": self.code,
+            "message": self.message,
+            "file": self.file,
+            "line": self.line,
+            "col": self.col,
+            "doc_url": self.doc_url,
+            "related": self.related,
+        }
+
 
 
 def format_diagnostic(d: Diagnostic) -> str:

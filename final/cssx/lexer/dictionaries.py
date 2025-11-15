@@ -94,6 +94,7 @@ DICCIONARIO_CSS = {
     "borde_izquierdo": "border-left",
     "borde_derecho": "border-right",
     "color_borde": "border-color",
+    "borde_color": "border-color",
     "tipo_borde": "border-style",
     "estilo_borde": "border-style",
     "grosor_borde": "border-width",
