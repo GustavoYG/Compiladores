@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación de CSSX</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            border-bottom: none;
+        }
+        h2 {
+            font-size: 2em;
+        }
+        h3 {
+            font-size: 1.5em;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63369;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: inherit;
+        }
+        .prop-section {
+            margin-bottom: 40px;
+            padding-left: 20px;
+            border-left: 3px solid #3498db;
+        }
+        .prop-section h3 {
+            color: #3498db;
+            border-bottom: none;
+        }
+        .navbar {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            width: 200px;
+        }
+        .navbar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .navbar a {
+            display: block;
+            padding: 8px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .navbar a:hover {
+            background-color: #ecf0f1;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📘 Documentación de CSSX</h1>
+        <p>Bienvenido a la documentación oficial de CSSX, un lenguaje diseñado para escribir estilos de una manera más simple e intuitiva.</p>
+
+        <h2 id="sintaxis-basica">Sintaxis Básica</h2>
+        <p>CSSX utiliza una sintaxis de <code>propiedad = valor</code> dentro de bloques definidos por selectores.</p>
+        <pre><code>
+selector {
+    propiedad1 = valor1
+    propiedad2 = valor2
+}
+        </code></pre>
+
+        <h2 id="variables">Variables</h2>
+        <p>Puedes declarar variables para reutilizar valores. Las variables deben comenzar con el símbolo <code>@</code>.</p>
+        <pre><code>
+@color_principal = #3498db
+@margen_defecto = 10px
+
+.mi-clase {
+    color = @color_principal
+    margen = @margen_defecto
+}
+        </code></pre>
+
+        <h2 id="anidacion">Anidación</h2>
+        <p>CSSX permite anidar selectores para reflejar la estructura de tu HTML y escribir menos código.</p>
+        <pre><code>
+.contenedor {
+    ancho = 90%
+
+    .titulo {
+        tamano = 24px
+        color = negro
+    }
+}
+        </code></pre>
+        <p>Esto se compilará a:</p>
+        <pre><code>
+.contenedor {
+    width: 90%;
+}
+.contenedor .titulo {
+    font-size: 24px;
+    color: black;
+}
+        </code></pre>
+
+        <h2 id="propiedades">Diccionario de Propiedades</h2>
+        <p>A continuación se listan todas las propiedades disponibles en CSSX y su equivalente en CSS estándar.</p>
+
+        <div id="prop-fondo" class="prop-section">
+            <h3>fondo</h3>
+            <p>Equivale a <code>background-color</code>. Define el color de fondo de un elemento.</p>
+            <pre><code>.selector { fondo = #f0f0f0 }</code></pre>
+        </div>
+        <div id="prop-color_fondo" class="prop-section">
+            <h3>color_fondo</h3>
+            <p>Equivale a <code>background-color</code>. Define el color de fondo de un elemento.</p>
+            <pre><code>.selector { color_fondo = rojo }</code></pre>
+        </div>
+        <div id="prop-imagen_fondo" class="prop-section">
+            <h3>imagen_fondo</h3>
+            <p>Equivale a <code>background-image</code>. Establece una imagen de fondo.</p>
+            <pre><code>.selector { imagen_fondo = url("/img/hero.jpg") }</code></pre>
+        </div>
+        <div id="prop-posicion_fondo" class="prop-section">
+            <h3>posicion_fondo</h3>
+            <p>Equivale a <code>background-position</code>. Define la posición inicial de la imagen de fondo.</p>
+            <pre><code>.selector { posicion_fondo = center center }</code></pre>
+        </div>
+        <div id="prop-repetir_fondo" class="prop-section">
+            <h3>repetir_fondo</h3>
+            <p>Equivale a <code>background-repeat</code>. Define si la imagen de fondo se repite.</p>
+            <pre><code>.selector { repetir_fondo = no-repeat }</code></pre>
+        </div>
+        <div id="prop-tamaño_fondo" class="prop-section">
+            <h3>tamaño_fondo</h3>
+            <p>Equivale a <code>background-size</code>. Define el tamaño de la imagen de fondo.</p>
+            <pre><code>.selector { tamaño_fondo = cover }</code></pre>
+        </div>
+        <div id="prop-fondo_adjunto" class="prop-section">
+            <h3>fondo_adjunto</h3>
+            <p>Equivale a <code>background-attachment</code>. Define si la imagen de fondo se desplaza con la página.</p>
+            <pre><code>.selector { fondo_adjunto = fixed }</code></pre>
+        </div>
+        <div id="prop-color" class="prop-section">
+            <h3>color</h3>
+            <p>Equivale a <code>color</code>. Define el color del texto.</p>
+            <pre><code>.selector { color = #333 }</code></pre>
+        </div>
+        <div id="prop-tamano" class="prop-section">
+            <h3>tamano</h3>
+            <p>Equivale a <code>font-size</code>. Define el tamaño de la fuente.</p>
+            <pre><code>.selector { tamano = 16px }</code></pre>
+        </div>
+        <div id="prop-tamaño" class="prop-section">
+            <h3>tamaño</h3>
+            <p>Equivale a <code>font-size</code>. Define el tamaño de la fuente.</p>
+            <pre><code>.selector { tamaño = 1.2em }</code></pre>
+        </div>
+        <div id="prop-fuente" class="prop-section">
+            <h3>fuente</h3>
+            <p>Equivale a <code>font-family</code>. Define la familia de fuentes para el texto.</p>
+            <pre><code>.selector { fuente = "Arial, sans-serif" }</code></pre>
+        </div>
+        <div id="prop-grosor" class="prop-section">
+            <h3>grosor</h3>
+            <p>Equivale a <code>font-weight</code>. Define el grosor de la fuente.</p>
+            <pre><code>.selector { grosor = bold }</code></pre>
+        </div>
+        <div id="prop-peso" class="prop-section">
+            <h3>peso</h3>
+            <p>Equivale a <code>font-weight</code>. Define el grosor de la fuente.</p>
+            <pre><code>.selector { peso = 700 }</code></pre>
+        </div>
+        <div id="prop-estilo_texto" class="prop-section">
+            <h3>estilo_texto</h3>
+            <p>Equivale a <code>font-style</code>. Define el estilo de la fuente (normal, italic).</p>
+            <pre><code>.selector { estilo_texto = italic }</code></pre>
+        </div>
+        <div id="prop-alinear" class="prop-section">
+            <h3>alinear</h3>
+            <p>Equivale a <code>text-align</code>. Alinea el texto dentro de un elemento.</p>
+            <pre><code>.selector { alinear = center }</code></pre>
+        </div>
+        <div id="prop-alinear_texto" class="prop-section">
+            <h3>alinear_texto</h3>
+            <p>Equivale a <code>text-align</code>. Alinea el texto dentro de un elemento.</p>
+            <pre><code>.selector { alinear_texto = right }</code></pre>
+        </div>
+        <div id="prop-decoracion" class="prop-section">
+            <h3>decoracion</h3>
+            <p>Equivale a <code>text-decoration</code>. Añade o quita decoración al texto (subrayado, etc.).</p>
+            <pre><code>.selector { decoracion = underline }</code></pre>
+        </div>
+        <div id="prop-decoracion_texto" class="prop-section">
+            <h3>decoracion_texto</h3>
+            <p>Equivale a <code>text-decoration</code>. Añade o quita decoración al texto.</p>
+            <pre><code>.selector { decoracion_texto = none }</code></pre>
+        </div>
+        <div id="prop-mayusculas" class="prop-section">
+            <h3>mayusculas</h3>
+            <p>Equivale a <code>text-transform</code>. Controla el uso de mayúsculas en el texto.</p>
+            <pre><code>.selector { mayusculas = uppercase }</code></pre>
+        </div>
+        <div id="prop-transformar_texto" class="prop-section">
+            <h3>transformar_texto</h3>
+            <p>Equivale a <code>text-transform</code>. Controla el uso de mayúsculas en el texto.</p>
+            <pre><code>.selector { transformar_texto = capitalize }</code></pre>
+        </div>
+        <div id="prop-espacio_entre_letras" class="prop-section">
+            <h3>espacio_entre_letras</h3>
+            <p>Equivale a <code>letter-spacing</code>. Define el espacio entre caracteres.</p>
+            <pre><code>.selector { espacio_entre_letras = 1.5px }</code></pre>
+        </div>
+        <div id="prop-espacio_letras" class="prop-section">
+            <h3>espacio_letras</h3>
+            <p>Equivale a <code>letter-spacing</code>. Define el espacio entre caracteres.</p>
+            <pre><code>.selector { espacio_letras = 0.1em }</code></pre>
+        </div>
+        <div id="prop-altura_linea" class="prop-section">
+            <h3>altura_linea</h3>
+            <p>Equivale a <code>line-height</code>. Define la altura de una línea de texto.</p>
+            <pre><code>.selector { altura_linea = 1.6 }</code></pre>
+        </div>
+        <div id="prop-interlineado" class="prop-section">
+            <h3>interlineado</h3>
+            <p>Equivale a <code>line-height</code>. Define la altura de una línea de texto.</p>
+            <pre><code>.selector { interlineado = 1.6 }</code></pre>
+        </div>
+        <div id="prop-sombra_texto" class="prop-section">
+            <h3>sombra_texto</h3>
+            <p>Equivale a <code>text-shadow</code>. Añade una sombra al texto.</p>
+            <pre><code>.selector { sombra_texto = 2px 2px 5px rgba(0,0,0,0.3) }</code></pre>
+        </div>
+        <div id="prop-ancho" class="prop-section">
+            <h3>ancho</h3>
+            <p>Equivale a <code>width</code>. Define el ancho de un elemento.</p>
+            <pre><code>.selector { ancho = 100% }</code></pre>
+        </div>
+        <div id="prop-anchura" class="prop-section">
+            <h3>anchura</h3>
+            <p>Equivale a <code>width</code>. Define el ancho de un elemento.</p>
+            <pre><code>.selector { anchura = 300px }</code></pre>
+        </div>
+        <div id="prop-alto" class="prop-section">
+            <h3>alto</h3>
+            <p>Equivale a <code>height</code>. Define la altura de un elemento.</p>
+            <pre><code>.selector { alto = 100vh }</code></pre>
+        </div>
+        <div id="prop-altura" class="prop-section">
+            <h3>altura</h3>
+            <p>Equivale a <code>height</code>. Define la altura de un elemento.</p>
+            <pre><code>.selector { altura = 50px }</code></pre>
+        </div>
+        <div id="prop-mostrar" class="prop-section">
+            <h3>mostrar</h3>
+            <p>Equivale a <code>display</code>. Define cómo se muestra un elemento (block, flex, etc.).</p>
+            <pre><code>.selector { mostrar = flex }</code></pre>
+        </div>
+        <div id="prop-ubicacion" class="prop-section">
+            <h3>ubicacion</h3>
+            <p>Equivale a <code>position</code>. Define el método de posicionamiento de un elemento.</p>
+            <pre><code>.selector { ubicacion = absolute }</code></pre>
+        </div>
+        <div id="prop-posicion" class="prop-section">
+            <h3>posicion</h3>
+            <p>Equivale a <code>position</code>. Define el método de posicionamiento de un elemento.</p>
+            <pre><code>.selector { posicion = relative }</code></pre>
+        </div>
+        <div id="prop-arriba" class="prop-section">
+            <h3>arriba</h3>
+            <p>Equivale a <code>top</code>. Define la posición superior de un elemento posicionado.</p>
+            <pre><code>.selector { arriba = 0 }</code></pre>
+        </div>
+        <div id="prop-abajo" class="prop-section">
+            <h3>abajo</h3>
+            <p>Equivale a <code>bottom</code>. Define la posición inferior de un elemento posicionado.</p>
+            <pre><code>.selector { abajo = 10px }</code></pre>
+        </div>
+        <div id="prop-izquierda" class="prop-section">
+            <h3>izquierda</h3>
+            <p>Equivale a <code>left</code>. Define la posición izquierda de un elemento posicionado.</p>
+            <pre><code>.selector { izquierda = 10px }</code></pre>
+        </div>
+        <div id="prop-derecha" class="prop-section">
+            <h3>derecha</h3>
+            <p>Equivale a <code>right</code>. Define la posición derecha de un elemento posicionado.</p>
+            <pre><code>.selector { derecha = 0 }</code></pre>
+        </div>
+        <div id="prop-orden" class="prop-section">
+            <h3>orden</h3>
+            <p>Equivale a <code>z-index</code>. Define el orden de apilamiento de un elemento.</p>
+            <pre><code>.selector { orden = 99 }</code></pre>
+        </div>
+        <div id="prop-indice_z" class="prop-section">
+            <h3>indice_z</h3>
+            <p>Equivale a <code>z-index</code>. Define el orden de apilamiento de un elemento.</p>
+            <pre><code>.selector { indice_z = 100 }</code></pre>
+        </div>
+        <div id="prop-margen" class="prop-section">
+            <h3>margen</h3>
+            <p>Equivale a <code>margin</code>. Define los márgenes exteriores de un elemento.</p>
+            <pre><code>.selector { margen = 10px auto }</code></pre>
+        </div>
+        <div id="prop-relleno" class="prop-section">
+            <h3>relleno</h3>
+            <p>Equivale a <code>padding</code>. Define los rellenos interiores de un elemento.</p>
+            <pre><code>.selector { relleno = 20px }</code></pre>
+        </div>
+        <div id="prop-borde" class="prop-section">
+            <h3>borde</h3>
+            <p>Equivale a <code>border</code>. Define el borde de un elemento.</p>
+            <pre><code>.selector { borde = 1px solido #ccc }</code></pre>
+        </div>
+        <div id="prop-redondeado" class="prop-section">
+            <h3>redondeado</h3>
+            <p>Equivale a <code>border-radius</code>. Define el radio de las esquinas de un elemento.</p>
+            <pre><code>.selector { redondeado = 8px }</code></pre>
+        </div>
+        <div id="prop-cursor" class="prop-section">
+            <h3>cursor</h3>
+            <p>Equivale a <code>cursor</code>. Define el tipo de cursor que se muestra al pasar sobre un elemento.</p>
+            <pre><code>.selector { cursor = pointer }</code></pre>
+        </div>
+        <div id="prop-opacidad" class="prop-section">
+            <h3>opacidad</h3>
+            <p>Equivale a <code>opacity</code>. Define la opacidad de un elemento.</p>
+            <pre><code>.selector { opacidad = 0.8 }</code></pre>
+        </div>
+        <div id="prop-sombra" class="prop-section">
+            <h3>sombra</h3>
+            <p>Equivale a <code>box-shadow</code>. Añade una sombra a la caja de un elemento.</p>
+            <pre><code>.selector { sombra = 0 4px 8px rgba(0,0,0,0.1) }</code></pre>
+        </div>
+    </div>
+</body>
+</html>
+
+
+    </div>
+</body>
+</html>
